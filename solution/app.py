@@ -17,23 +17,23 @@ def messages_route():
     with sqlite3.connect(DBPATH) as conn:
         messages_res = conn.execute("select body from messages")
         messages = [m[0] for m in messages_res]
-        print(re.split('{ | }', messages))
         return jsonify(list(messages)), 200
 
-# @app.route("/test", methods=["GET"])
-# def test_route():
-#     """
-#     Return all the messages
-#     """
+@app.route("/test", methods=["GET"])
+def test_route():
+    """
+    Return all the messages
+    """
 
-#     with sqlite3.connect(DBPATH) as conn:
-#         cur = conn.cursor()
-#         cur.execute("select * from state")
-#         rows = cur.fetchall()
-#         for row in rows:
-#             print(row)
-#         messages = [ messages for row in rows ]
-#         return jsonify(list(messages)), 200
+    with sqlite3.connect(DBPATH) as conn:
+        cur = conn.cursor()
+        cur.execute("select * from state")
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        # messages = [ messages for row in rows ]
+        # return jsonify(list(messages)), 200
+        return jsonify("list(messages)"), 200
 
 @app.route("/search", methods=["POST"])
 def search_route():
