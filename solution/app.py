@@ -1,9 +1,8 @@
 from flask import Flask, request, jsonify
 import sqlite3
 import json
-import re # regular expressions
+import re  # regular expressions
 from pprint import pprint
-
 
 app = Flask(__name__)
 DBPATH = "../database.db"
@@ -28,7 +27,8 @@ def messages_route():
             for template in templates:
                 regex = r"{|\||}"
                 state = re.split(regex, template)
-                values = conn.execute("select value from state where id=:id", {"id": state[1]})
+                values = conn.execute(
+                    "select value from state where id=:id", {"id": state[1]})
                 value = values.fetchall()
                 if len(value):
                     for v in value:
@@ -38,12 +38,13 @@ def messages_route():
             messages.append(message_str)
         return jsonify(messages), 200
 
+
 @app.route("/test", methods=["GET"])
 def test_route():
     """
     Return all the messages
     """
-    print("****************************************************************************")
+    print("******************************************************************")
     with sqlite3.connect(DBPATH) as conn:
         messages = []
         # messages_res = conn.execute("select body from messages")
@@ -59,7 +60,8 @@ def test_route():
         #         regex = r"{|\||}"
         #         state = re.split(regex, template)
         #         print("==> " + str(state))
-        #         values = conn.execute("select value from state where id=:id", {"id": state[1]})
+        #         values = conn.execute("select value from state where id=:id",
+        #           {"id": state[1]})
         #         value = values.fetchall()
         #
         #         if len(value):
@@ -69,13 +71,15 @@ def test_route():
         #                 message_str = message_str.replace(template, v[0])
         #
         #         else:
-        #             print("===> " + "No such row exists!!!" + ", so use " + state[2])
+        #             print("===> " + "No such row exists!!!" + ", so use "
+        # + state[2])
         #             message_str = message_str.replace(template, state[2])
         #     print("====> " + message_str)
         #     messages.append(message_str)
         #     print("****************************************************************************")
         print(messages)
         return jsonify(messages), 200
+
 
 @app.route("/search", methods=["POST"])
 def search_route():
@@ -84,7 +88,8 @@ def search_route():
 
     Accepts a 'query' as JSON post, returns the full answer.
 
-    curl -d '{"query":"Star Trek"}' -H "Content-Type: application/json" -X POST http://localhost:5000/search
+    curl -d '{"query":"Star Trek"}' -H "Content-Type: application/json"
+            -X POST http://localhost:5000/search
     """
 
     with sqlite3.connect(DBPATH) as conn:
@@ -92,7 +97,8 @@ def search_route():
         if not query:
             return jsonify({"error": "Invalid input"}), 400
         res = conn.execute(
-            "select id, title from answers where title like ? ", [f"%{query}%"],
+            "select id, title from answers where title like ? ", [
+                f"%{query}%"],
         )
         answers = [{"id": r[0], "title": r[1]} for r in res]
         print(query, "--> ")
